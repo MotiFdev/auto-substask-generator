@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+.theme-dark .bg-white {
+	background-color: #111827;
+}
+
+.theme-dark .bg-gray-50 {
+	background-color: #1f2937;
+}
+
+.theme-dark .bg-gray-100 {
+	background-color: #374151;
+}
+
+.theme-dark .text-gray-900 {
+	color: #f9fafb;
+}
+
+.theme-dark .text-gray-700 {
+	color: #e5e7eb;
+}
+
+.theme-dark .text-gray-600,
+.theme-dark .text-gray-500 {
+	color: #9ca3af;
+}
+
+.theme-dark .border-gray-100,
+.theme-dark .border-gray-200 {
+	border-color: #374151;
+}
+
+.theme-dark .hover\:bg-gray-50:hover {
+	background-color: #1f2937;
+}
+
+.theme-dark .hover\:bg-gray-800:hover {
+	background-color: #374151;
+}
