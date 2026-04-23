@@ -140,7 +140,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
                 }}
                 className="mt-1"
               />
-              <span>Body Script</span>
+              <span>Body Script (bsid)</span>
             </label>
             <label className="flex items-start gap-2 text-sm text-gray-700">
               <input
@@ -155,7 +155,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
                 }}
                 className="mt-1"
               />
-              <span>Body Visual</span>
+              <span>Body Visual (bvid)</span>
             </label>
             <label className="flex items-start gap-2 text-sm text-gray-700">
               <input
@@ -170,7 +170,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
                 }}
                 className="mt-1"
               />
-              <span>Hook Script</span>
+              <span>Hook Script (hsid)</span>
             </label>
             <label className="flex items-start gap-2 text-sm text-gray-700">
               <input
@@ -185,7 +185,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
                 }}
                 className="mt-1"
               />
-              <span>Hook Visual</span>
+              <span>Hook Visual (hvid)</span>
             </label>
           </div>
         </div>
