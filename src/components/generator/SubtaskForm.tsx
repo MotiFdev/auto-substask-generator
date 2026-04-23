@@ -10,39 +10,33 @@ interface SubtaskFormProps {
   onGenerate: (data: SubtaskOutput[]) => void;
 }
 
-type SubtaskPairingMode = 'sameBodyDifferentHook' | 'sameHookDifferentBody';
+type SubtaskPairingChoice = 'bsid' | 'bvid' | 'hsid' | 'hvid';
 
 const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
   const [vertical, setVertical] = useState<string>('');
   const [strategist, setStrategist] = useState<string>('');
   const [platform, setPlatform] = useState<string>('');
   const [subtaskCountInput, setSubtaskCountInput] = useState<string>('1');
-  const [pairingMode, setPairingMode] = useState<SubtaskPairingMode>('sameBodyDifferentHook');
+  const [pairingChoices, setPairingChoices] = useState<SubtaskPairingChoice[]>(['bsid', 'bvid']);
   const { generateIds, loading, error: apiError } = useDeepSeek();
   const [errors, setErrors] = useState<FormErrors>({});
 
   const parsedSubtaskCount = Number.parseInt(subtaskCountInput, 10);
   const shouldShowPairingMode = Number.isInteger(parsedSubtaskCount) && parsedSubtaskCount >= 2;
 
-  const applyPairingMode = (idsList: SubtaskOutput[], mode: SubtaskPairingMode): SubtaskOutput[] => {
+  const applyPairingChoices = (idsList: SubtaskOutput[], choices: SubtaskPairingChoice[]): SubtaskOutput[] => {
     if (idsList.length < 2) {
       return idsList;
     }
 
     const [first] = idsList;
 
-    if (mode === 'sameBodyDifferentHook') {
-      return idsList.map((item) => ({
-        ...item,
-        bsid: first.bsid,
-        bvid: first.bvid
-      }));
-    }
-
     return idsList.map((item) => ({
       ...item,
-      hsid: first.hsid,
-      hvid: first.hvid
+      ...(choices.includes('bsid') ? { bsid: first.bsid } : {}),
+      ...(choices.includes('bvid') ? { bvid: first.bvid } : {}),
+      ...(choices.includes('hsid') ? { hsid: first.hsid } : {}),
+      ...(choices.includes('hvid') ? { hvid: first.hvid } : {})
     }));
   };
 
@@ -71,7 +65,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
         ...ids
       }));
 
-      onGenerate(applyPairingMode(generatedSubtasks, pairingMode));
+      onGenerate(applyPairingChoices(generatedSubtasks, pairingChoices));
     } catch (error) {
       console.error('Generation failed:', error);
     }
@@ -129,28 +123,69 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Subtask Pairing Mode
           </label>
+          <p className="text-xs text-gray-500 mb-3">
+            Select the IDs you want to keep the same across all generated subtasks.
+          </p>
           <div className="space-y-2">
             <label className="flex items-start gap-2 text-sm text-gray-700">
               <input
-                type="radio"
-                name="pairingMode"
-                value="sameBodyDifferentHook"
-                checked={pairingMode === 'sameBodyDifferentHook'}
-                onChange={() => setPairingMode('sameBodyDifferentHook')}
+                type="checkbox"
+                checked={pairingChoices.includes('bsid')}
+                onChange={() => {
+                  setPairingChoices((currentChoices) =>
+                    currentChoices.includes('bsid')
+                      ? currentChoices.filter((choice) => choice !== 'bsid')
+                      : [...currentChoices, 'bsid']
+                  );
+                }}
                 className="mt-1"
               />
-              <span>Same body script/body visual, different hook script/hook visual</span>
+              <span>Body Script</span>
             </label>
             <label className="flex items-start gap-2 text-sm text-gray-700">
               <input
-                type="radio"
-                name="pairingMode"
-                value="sameHookDifferentBody"
-                checked={pairingMode === 'sameHookDifferentBody'}
-                onChange={() => setPairingMode('sameHookDifferentBody')}
+                type="checkbox"
+                checked={pairingChoices.includes('bvid')}
+                onChange={() => {
+                  setPairingChoices((currentChoices) =>
+                    currentChoices.includes('bvid')
+                      ? currentChoices.filter((choice) => choice !== 'bvid')
+                      : [...currentChoices, 'bvid']
+                  );
+                }}
                 className="mt-1"
               />
-              <span>Same hook script/hook visual, different body script/body visual</span>
+              <span>Body Visual</span>
+            </label>
+            <label className="flex items-start gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={pairingChoices.includes('hsid')}
+                onChange={() => {
+                  setPairingChoices((currentChoices) =>
+                    currentChoices.includes('hsid')
+                      ? currentChoices.filter((choice) => choice !== 'hsid')
+                      : [...currentChoices, 'hsid']
+                  );
+                }}
+                className="mt-1"
+              />
+              <span>Hook Script</span>
+            </label>
+            <label className="flex items-start gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={pairingChoices.includes('hvid')}
+                onChange={() => {
+                  setPairingChoices((currentChoices) =>
+                    currentChoices.includes('hvid')
+                      ? currentChoices.filter((choice) => choice !== 'hvid')
+                      : [...currentChoices, 'hvid']
+                  );
+                }}
+                className="mt-1"
+              />
+              <span>Hook Visual</span>
             </label>
           </div>
         </div>

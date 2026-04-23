@@ -7,21 +7,20 @@ export const VERTICALS: Vertical[] = [
   { label: 'Blood Sugar', value: 'BS' },
   { label: 'Weight Loss', value: 'WL' },
   { label: 'TH', value: 'TH' },
-  { label: 'Medicare', value: 'MC' }
+  { label: 'Medicare', value: 'MD' }
 ];
 
 export const CREATIVE_STRATEGISTS: CreativeStrategist[] = [
   { label: 'Kaz', value: 'KZ' },
   { label: 'Yass', value: 'YT' },
-  { label: 'Sam', value: 'SM' },
   { label: 'Cam', value: 'CD' }
 ];
 
 export const PLATFORMS: DropdownOption[] = [
   { label: 'YouTube', value: 'YT' },
   { label: 'Facebook', value: 'FB' },
-  { label: 'TikTok', value: 'TIKTOK' },
-  { label: 'Twitter', value: 'TT' }
+  { label: 'TikTok', value: 'TT' },
+  { label: 'Twitter', value: 'TW' }
 ];
 
 export const ID_FIELDS: IdField[] = [
