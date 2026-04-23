@@ -2,7 +2,48 @@ import type { GeneratedIds } from '../types/subtask.types';
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
-export const generateUniqueId = async (fieldType: string): Promise<string> => {
+type GenerateUniqueIdOptions = {
+  avoidWords?: string[];
+};
+
+const WORD_PREFIXES = [
+  'Nova', 'Luma', 'Vanta', 'Aria', 'Zeno', 'Mira', 'Sol', 'Astra', 'Cinder', 'Orion',
+  'Kairo', 'Vel', 'Quill', 'Brio', 'Echo', 'Flux', 'Rune', 'Sage', 'Thorn', 'Vale'
+];
+
+const WORD_SUFFIXES = [
+  'Bloom', 'Forge', 'Peak', 'Wave', 'Echo', 'Drift', 'Stone', 'Spark', 'Field', 'Wing',
+  'Cliff', 'Grove', 'Comet', 'Ray', 'Hollow', 'Harbor', 'Pulse', 'Shade', 'Fable', 'Bloom'
+];
+
+const WORD_BANK = [
+  'Aurora', 'Cobalt', 'Ember', 'Marble', 'Harbor', 'Juniper', 'Lattice', 'Meadow', 'Nimbus', 'Quartz',
+  'Ridge', 'Saffron', 'Tundra', 'Velvet', 'Willow', 'Zephyr', 'Atlas', 'Basil', 'Coral', 'Delta'
+];
+
+const normalizeWord = (value: string): string => value.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+
+const createLocalFallbackWord = (avoidWords: string[] = []): string => {
+  const usedWords = new Set(avoidWords.map((word) => word.toLowerCase()));
+
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    const sourcePool = attempt % 3 === 0 ? WORD_BANK : attempt % 3 === 1 ? WORD_PREFIXES : WORD_SUFFIXES;
+    const randomWord = sourcePool[Math.floor(Math.random() * sourcePool.length)];
+    const pairedWord = WORD_SUFFIXES[Math.floor(Math.random() * WORD_SUFFIXES.length)];
+    const candidate = attempt % 3 === 0 ? randomWord : `${randomWord}${pairedWord}`;
+    const normalizedCandidate = candidate.toLowerCase();
+
+    if (!usedWords.has(normalizedCandidate)) {
+      return candidate;
+    }
+  }
+
+  return `Nova${Math.random().toString(36).slice(2, 6)}`;
+};
+
+export const generateUniqueId = async (fieldType: string, options: GenerateUniqueIdOptions = {}): Promise<string> => {
+  const avoidWords = options.avoidWords ?? [];
+  const avoidText = avoidWords.length > 0 ? `Avoid these words: ${avoidWords.join(', ')}.` : '';
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -15,15 +56,16 @@ export const generateUniqueId = async (fieldType: string): Promise<string> => {
       messages: [
         {
           role: 'system',
-          content: 'You are a creative identifier generator. Generate exactly one unique meaningful name (1–2 words max). It must be readable, like a name of an animal, place, object, or concept. Output ONLY the name, nothing else.',
+          content: 'You are a creative identifier generator. Generate exactly one uncommon, vivid, pronounceable word or 2-word phrase. Prefer different semantic families on each call: nature, astronomy, minerals, mythology, weather, animals, architecture, ocean, or abstract concepts. Output ONLY the name, nothing else. Do not reuse obvious common words.',
         },
         {
           role: 'user',
-          content: `Generate one unique name for this field type: ${fieldType}. It should be a real word or a natural-sounding name. Output only the name.`,
+          content: `Generate one unique name for this field type: ${fieldType}. ${avoidText} It should feel fresh, random, and not repeat other generated words. Output only the name.`,
         },
       ],
       max_completion_tokens: 20,
-      temperature: 0.9,
+      temperature: 1.15,
+      top_p: 0.95,
     }),
   });
 
@@ -35,24 +77,26 @@ export const generateUniqueId = async (fieldType: string): Promise<string> => {
   const data = await response.json();
   const content: string = data.choices?.[0]?.message?.content ?? '';
 
-  // Clean output
-  const cleaned = content.trim();
+  const cleaned = normalizeWord(content);
 
   // Take only first "word group" (handles cases like "Golden River")
   const id = cleaned.split('\n')[0].trim();
 
-  if (!id) {
-    throw new Error(`Groq returned an unexpected response: "${content}"`);
+  if (!id || avoidWords.some((word) => word.toLowerCase() === id.toLowerCase())) {
+    return createLocalFallbackWord(avoidWords);
   }
 
   return id;
 };
 
-export const generateMultipleIds = async (fields: string[]): Promise<GeneratedIds> => {
+export const generateMultipleIds = async (fields: string[], options: GenerateUniqueIdOptions = {}): Promise<GeneratedIds> => {
   const result: Partial<GeneratedIds> = {};
+  const avoidWords = [...(options.avoidWords ?? [])];
 
   for (const field of fields) {
-    result[field as keyof GeneratedIds] = await generateUniqueId(field);
+    const generatedValue = await generateUniqueId(field, { avoidWords });
+    result[field as keyof GeneratedIds] = generatedValue;
+    avoidWords.push(generatedValue);
     await new Promise(resolve => setTimeout(resolve, 100)); // rate limit safety
   }
 

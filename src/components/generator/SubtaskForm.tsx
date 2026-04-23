@@ -24,22 +24,6 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
   const parsedSubtaskCount = Number.parseInt(subtaskCountInput, 10);
   const shouldShowPairingMode = Number.isInteger(parsedSubtaskCount) && parsedSubtaskCount >= 2;
 
-  const applyPairingChoices = (idsList: SubtaskOutput[], choices: SubtaskPairingChoice[]): SubtaskOutput[] => {
-    if (idsList.length < 2) {
-      return idsList;
-    }
-
-    const [first] = idsList;
-
-    return idsList.map((item) => ({
-      ...item,
-      ...(choices.includes('bsid') ? { bsid: first.bsid } : {}),
-      ...(choices.includes('bvid') ? { bvid: first.bvid } : {}),
-      ...(choices.includes('hsid') ? { hsid: first.hsid } : {}),
-      ...(choices.includes('hvid') ? { hvid: first.hvid } : {})
-    }));
-  };
-
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     if (!vertical) newErrors.vertical = 'Please select a vertical';
@@ -57,7 +41,9 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
     if (!validate()) return;
 
     try {
-      const generatedIds = await generateIds(['bsid', 'bvid', 'hsid', 'hvid'], parsedSubtaskCount);
+      const generatedIds = await generateIds(['bsid', 'bvid', 'hsid', 'hvid'], parsedSubtaskCount, {
+        fixedFields: pairingChoices
+      });
       const generatedSubtasks: SubtaskOutput[] = generatedIds.map((ids) => ({
         vertical,
         strategist,
@@ -65,7 +51,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
         ...ids
       }));
 
-      onGenerate(applyPairingChoices(generatedSubtasks, pairingChoices));
+      onGenerate(generatedSubtasks);
     } catch (error) {
       console.error('Generation failed:', error);
     }
