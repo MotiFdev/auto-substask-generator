@@ -17,7 +17,7 @@ const SubtaskForm: React.FC<SubtaskFormProps> = ({ onGenerate }) => {
   const [strategist, setStrategist] = useState<string>('');
   const [platform, setPlatform] = useState<string>('');
   const [subtaskCountInput, setSubtaskCountInput] = useState<string>('1');
-  const [pairingChoices, setPairingChoices] = useState<SubtaskPairingChoice[]>(['bsid', 'bvid']);
+  const [pairingChoices, setPairingChoices] = useState<SubtaskPairingChoice[]>([]);
   const { generateIds, loading, error: apiError } = useDeepSeek();
   const [errors, setErrors] = useState<FormErrors>({});
 
