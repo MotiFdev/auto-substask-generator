@@ -7,7 +7,8 @@ export const VERTICALS: Vertical[] = [
   { label: 'Blood Sugar', value: 'BS' },
   { label: 'Weight Loss', value: 'WL' },
   { label: 'TH', value: 'TH' },
-  { label: 'Medicare', value: 'MD' }
+  { label: 'Medicare', value: 'MD' },
+  {label: 'Memory', value: 'MEM' }
 ];
 
 export const CREATIVE_STRATEGISTS: CreativeStrategist[] = [
