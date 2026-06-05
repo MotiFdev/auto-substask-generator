@@ -8,7 +8,8 @@ export const VERTICALS: Vertical[] = [
   { label: 'Weight Loss', value: 'WL' },
   { label: 'TH', value: 'TH' },
   { label: 'Medicare', value: 'MD' },
-  {label: 'Memory', value: 'MEM' }
+  {label: 'Memory', value: 'MEM' },
+  { label: 'ED', value: 'ED' },
 ];
 
 export const CREATIVE_STRATEGISTS: CreativeStrategist[] = [
