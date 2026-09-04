@@ -81,7 +81,7 @@ export const generateUniqueId = async (fieldType: string, options: GenerateUniqu
     throw new Error(`Failed to generate a wordlist ID for ${fieldType}`);
   }
 
-  return selectedWord;
+  return selectedWord.charAt(0).toUpperCase() + selectedWord.slice(1);
 };
 
 export const generateMultipleIds = async (fields: string[], options: GenerateUniqueIdOptions = {}): Promise<GeneratedIds> => {

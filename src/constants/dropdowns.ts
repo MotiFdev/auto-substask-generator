@@ -10,12 +10,17 @@ export const VERTICALS: Vertical[] = [
   { label: 'Medicare', value: 'MD' },
   {label: 'Memory', value: 'MEM' },
   { label: 'ED', value: 'ED' },
+  {label: 'Bizzop', value: 'BZ' },
+  {label: 'Nerve', value: 'NV' },
+  {label: 'Ergo', value: 'ERGO' },
+  {label: 'Baobab', value: 'BAOBAB' },
 ];
 
 export const CREATIVE_STRATEGISTS: CreativeStrategist[] = [
   { label: 'Kaz', value: 'KZ' },
   { label: 'Yass', value: 'YT' },
-  { label: 'Cam', value: 'CD' }
+  { label: 'Cam', value: 'CD' },
+  { label: 'Theo', value: 'TO' },
 ];
 
 export const PLATFORMS: DropdownOption[] = [
