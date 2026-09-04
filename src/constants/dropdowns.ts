@@ -11,7 +11,7 @@ export const VERTICALS: Vertical[] = [
   {label: 'Memory', value: 'MEM' },
   { label: 'ED', value: 'ED' },
   {label: 'Bizzop', value: 'BZ' },
-  {label: 'Nerve', value: 'NV' },
+  {label: 'Nerve', value: 'NERVE' },
   {label: 'Ergo', value: 'ERGO' },
   {label: 'Baobab', value: 'BAOBAB' },
 ];
