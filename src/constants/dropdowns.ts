@@ -14,6 +14,7 @@ export const VERTICALS: Vertical[] = [
   {label: 'Nerve', value: 'NERVE' },
   {label: 'Ergo', value: 'ERGO' },
   {label: 'Baobab', value: 'BAOBAB' },
+  {label: 'truvision', value: 'TV' },
 ];
 
 export const CREATIVE_STRATEGISTS: CreativeStrategist[] = [
